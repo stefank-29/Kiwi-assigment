@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import Image from 'next/image';
+import { useState } from 'react';
 import styled from 'styled-components';
+import { getWords } from '../services/ConvertService';
 
 const HomeStyles = styled.div`
     display: flex;
@@ -53,14 +55,22 @@ const FormStyles = styled.form`
 `;
 
 export default function Home() {
-    function handleSubmit(e) {
+    const [number, setNumber] = useState();
+
+    async function handleSubmit(e) {
         e.preventDefault();
+        const data = await getWords(number);
+        console.log(data);
     }
 
     return (
         <HomeStyles>
             <FormStyles onSubmit={handleSubmit}>
-                <input type="number" placeholder="Enter number" />
+                <input
+                    type="number"
+                    placeholder="Enter number"
+                    onChange={(e) => setNumber(e.target.value)}
+                />
                 <button className="convert-btn" type="submit">
                     Convert
                 </button>
