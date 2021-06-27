@@ -22,9 +22,14 @@ const GlobalStyles = createGlobalStyle`
         --backgroundGrey: #E8E8E8;
         --lightGreen: #3BFF89;
         --lightRed: #FF3B3B;
+        --kiwilight: rgba(0, 173, 152, 0.3);
+        --kiwi: rgb(0, 173, 152);
+
         scroll-behavior: smooth;
     }
 
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
 
     body {
         padding: 0;
@@ -32,7 +37,7 @@ const GlobalStyles = createGlobalStyle`
         font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
             Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
         font-size: 1.5rem;
-        background-color: var(--lightblue);
+        background-color: var(--kiwilight);
 
     }
     a {
@@ -55,7 +60,6 @@ const InnerStyles = styled.div`
     margin: 0 auto;
     min-height: 100vh;
     max-width: 1200px;
-    padding: 3rem 0;
 `;
 
 export default function Page({ children }) {
