@@ -59,8 +59,8 @@ export default function Home() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        const data = await getWords(number);
-        console.log(data);
+        const words = await getWords(number);
+        console.log(words);
     }
 
     return (
