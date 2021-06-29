@@ -6,9 +6,11 @@ const instance = axios.create({
 });
 
 export async function getWords({ queryKey }) {
-    const { number } = queryKey[1];
+    const { number, filter } = queryKey[1];
     try {
-        const response = await instance.get('/convert', { params: { number } });
+        const response = await instance.get('/convert', {
+            params: { number, filter },
+        });
         return response.data;
     } catch (error) {
         return null;

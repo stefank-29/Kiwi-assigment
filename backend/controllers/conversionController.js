@@ -22,6 +22,8 @@ function convert(number, index, keyLetters, arr, words) {
 
 exports.convertToWords = (req, res) => {
     const number = req.query.number;
+    const filter = req.query.filter;
+    console.log(filter);
 
     if (number.length === 0) {
         return res.send([]);
@@ -46,7 +48,8 @@ exports.convertToWords = (req, res) => {
     convert(number, 0, keyLetters, arr, words);
 
     // filter only real english words
-    //words = words.filter((word) => englishWords.includes(word));
-
+    if (filter == 'true') {
+        words = words.filter((word) => englishWords.includes(word));
+    }
     res.send(words);
 };

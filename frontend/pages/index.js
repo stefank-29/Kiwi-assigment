@@ -33,6 +33,7 @@ const HeaderStyles = styled.div`
     }
     form {
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         input {
@@ -51,6 +52,21 @@ const HeaderStyles = styled.div`
                 border: transparent;
                 box-shadow: inset 0 0 0px 2px #0073e6;
             }
+        }
+        .upper-form {
+            display: flex;
+            align-items: center;
+        }
+        input[type='checkbox'] {
+            width: auto;
+            margin-right: 1.2rem;
+        }
+        .filter {
+            display: flex;
+            align-items: center;
+            margin-top: 3.5rem;
+            align-self: flex-start;
+            font-size: 1.8rem;
         }
         .input-div {
             position: relative;
@@ -86,7 +102,7 @@ const WordsStyles = styled.div`
     background-color: whitesmoke;
     box-shadow: 0 0 4px 1px var(--kiwi);
     overflow: auto;
-
+    margin-top: 5rem;
     .scroll {
         position: relative;
         width: 100%;
@@ -119,12 +135,13 @@ const WordsStyles = styled.div`
 
 export default function Home() {
     const [number, setNumber] = useState('');
+    const [filter, setFilter] = useState(false);
     const [inputError, setInputError] = useState(false);
     const [words, setWords] = useState(null);
     const [limit, setLimit] = useState(100);
 
     const { isLoading, data, refetch } = useQuery(
-        ['getWords', { number: number }],
+        ['getWords', { number: number, filter: filter }],
         getWords,
         {
             refetchOnWindowFocus: false,
@@ -136,13 +153,20 @@ export default function Home() {
         e.preventDefault();
 
         if (number == '') {
-            console.log('aaa');
             setInputError(true);
             return;
         }
         setInputError(false);
         const { data } = await refetch();
         setWords(data);
+    }
+
+    function handleCheckbox(e) {
+        if (e.target.checked === true) {
+            setFilter(true);
+        } else {
+            setFilter(false);
+        }
     }
 
     function fetchData() {
@@ -154,28 +178,38 @@ export default function Home() {
             <HeaderStyles>
                 <h1 className="title">Number to Words</h1>
                 <form onSubmit={handleSubmit}>
-                    <div className="input-div">
-                        <input
-                            onChange={(e) => setNumber(e.target.value)}
-                            placeholder="Enter number"
-                            type="text"
-                            maxLength="14"
-                            onInput={(e) =>
-                                (e.target.value = e.target.value.replace(
-                                    /[^0-9]/g,
-                                    ''
-                                ))
-                            }
-                        />
-                        {inputError && (
-                            <span className="error">
-                                Please enter the number
-                            </span>
-                        )}
+                    <div className="upper-form">
+                        <div className="input-div">
+                            <input
+                                onChange={(e) => setNumber(e.target.value)}
+                                placeholder="Enter number"
+                                type="text"
+                                maxLength="14"
+                                onInput={(e) =>
+                                    (e.target.value = e.target.value.replace(
+                                        /[^0-9]/g,
+                                        ''
+                                    ))
+                                }
+                            />
+                            {inputError && (
+                                <span className="error">
+                                    Please enter the number
+                                </span>
+                            )}
+                        </div>
+                        <button className="convert-btn" type="submit">
+                            Convert
+                        </button>
                     </div>
-                    <button className="convert-btn" type="submit">
-                        Convert
-                    </button>
+                    <div className="filter">
+                        <input
+                            type="checkbox"
+                            id="check"
+                            onChange={handleCheckbox}
+                        />
+                        <label htmlFor="check">Include only real words</label>
+                    </div>
                 </form>
             </HeaderStyles>
             <WordsStyles id="scrollable">
