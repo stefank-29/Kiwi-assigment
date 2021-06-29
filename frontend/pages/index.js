@@ -3,8 +3,10 @@ import Image from 'next/image';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { getWords } from '../services/ConvertService';
-
 import { useQuery } from 'react-query';
+
+import { css } from '@emotion/react';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const HomeStyles = styled.div`
     display: flex;
@@ -72,12 +74,6 @@ const WordsStyles = styled.div`
     }
 `;
 
-import axios from 'axios';
-
-const instance = axios.create({
-    baseURL: 'http://localhost:3000/api',
-});
-
 export default function Home() {
     const [number, setNumber] = useState();
     const [words, setWords] = useState([]);
@@ -111,7 +107,16 @@ export default function Home() {
             </FormStyles>
             <WordsStyles>
                 {isLoading ? (
-                    <p>Loading...</p>
+                    <ClipLoader
+                        color="rgb(0, 173, 152)"
+                        loading={isLoading}
+                        css="
+                        display: block;
+                        margin:  auto;
+                        border-color: red;
+                    "
+                        size={100}
+                    />
                 ) : (
                     words?.map((word, index) => (
                         <span key={index} className="word">
