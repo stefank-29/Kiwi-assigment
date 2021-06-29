@@ -40,8 +40,8 @@ exports.convertToWords = (req, res) => {
 
     convert(number, 0, keyLetters, arr, words);
 
-    console.log(englishWords.length);
-    words = words.filter((word) => englishWords.includes(word));
+    // filter only real english words
+    //words = words.filter((word) => englishWords.includes(word));
 
     res.send(words);
 };

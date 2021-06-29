@@ -4,6 +4,8 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { getWords } from '../services/ConvertService';
 
+import { useQuery } from 'react-query';
+
 const HomeStyles = styled.div`
     display: flex;
     flex-direction: column;
@@ -53,14 +55,46 @@ const FormStyles = styled.form`
         }
     }
 `;
+const WordsStyles = styled.div`
+    width: 100%;
+    height: 50rem;
+    background-color: whitesmoke;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding: 3rem;
+    overflow: auto;
+    .word {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 1rem;
+    }
+`;
+
+import axios from 'axios';
+
+const instance = axios.create({
+    baseURL: 'http://localhost:3000/api',
+});
 
 export default function Home() {
     const [number, setNumber] = useState();
+    const [words, setWords] = useState([]);
+    const { isLoading, error, data, refetch } = useQuery(
+        ['getWords', { number: number }],
+        getWords,
+        {
+            refetchOnWindowFocus: false,
+            enabled: false,
+        }
+    );
 
     async function handleSubmit(e) {
         e.preventDefault();
-        const words = await getWords(number);
-        console.log(words);
+
+        const { data } = await refetch();
+        setWords(data);
     }
 
     return (
@@ -75,6 +109,17 @@ export default function Home() {
                     Convert
                 </button>
             </FormStyles>
+            <WordsStyles>
+                {isLoading ? (
+                    <p>Loading...</p>
+                ) : (
+                    words?.map((word, index) => (
+                        <span key={index} className="word">
+                            {word}
+                        </span>
+                    ))
+                )}
+            </WordsStyles>
         </HomeStyles>
     );
 }
