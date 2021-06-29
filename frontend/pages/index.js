@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { getWords } from '../services/ConvertService';
 import { useQuery } from 'react-query';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { css } from '@emotion/react';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 const HomeStyles = styled.div`
@@ -17,43 +16,66 @@ const HomeStyles = styled.div`
     height: 100vh;
 `;
 
-const FormStyles = styled.form`
+const HeaderStyles = styled.div`
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 30%;
     width: 100%;
-    input {
-        width: 17rem;
-        padding: 1rem;
-        margin-right: 2rem;
-        border-radius: 3px;
-        border: 1px solid #0080ff;
-        outline: none;
-        font-size: 1.5rem;
-        font-family: 'Roboto', sans-serif;
+    .title {
         color: var(--black);
+        font-size: 4.5rem;
+        font-family: 'Nunito', sans-serif;
         font-weight: 700;
-        transition: all 0.3s ease-in-out;
-        :focus {
-            border: transparent;
-            box-shadow: inset 0 0 0px 2px #0073e6;
-        }
+        text-align: center;
+        margin-bottom: 2rem;
     }
-    .convert-btn {
-        padding: 1rem 1.5rem;
-        background-color: var(--kiwi);
-        color: white;
-        border-radius: 5px;
-        border: none;
-        font-size: 1.5rem;
-        font-weight: bold;
-        font-family: 'Roboto', sans-serif;
-        cursor: pointer;
-        transition: all 0.3s ease-in-out;
+    form {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        input {
+            width: 17rem;
+            padding: 1rem;
+            margin-right: 2rem;
+            border-radius: 3px;
+            border: 1px solid #0080ff;
+            outline: none;
+            font-size: 1.5rem;
+            font-family: 'Roboto', sans-serif;
+            color: var(--black);
+            font-weight: 700;
+            transition: all 0.3s ease-in-out;
+            :focus {
+                border: transparent;
+                box-shadow: inset 0 0 0px 2px #0073e6;
+            }
+        }
+        .input-div {
+            position: relative;
+            .error {
+                position: absolute;
+                left: 0;
+                top: 4.5rem;
+                color: var(--lightRed);
+            }
+        }
+        .convert-btn {
+            padding: 1rem 1.5rem;
+            background-color: var(--kiwi);
+            color: white;
+            border-radius: 5px;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: 'Roboto', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
 
-        :hover {
-            background-color: #008071;
+            :hover {
+                background-color: #008071;
+            }
         }
     }
 `;
@@ -71,7 +93,7 @@ const WordsStyles = styled.div`
         height: 100%;
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        grid-template-rows: 50px;
+        grid-template-rows: 3.8rem;
     }
 
     .word {
@@ -89,14 +111,19 @@ const WordsStyles = styled.div`
         left: 50%;
         transform: translate(-50%, -50%);
     }
+    .no-results {
+        font-size: 2.5rem;
+        font-family: 'Roboto', sans-serif;
+    }
 `;
 
 export default function Home() {
-    const [number, setNumber] = useState();
-    const [words, setWords] = useState([]);
+    const [number, setNumber] = useState('');
+    const [inputError, setInputError] = useState(false);
+    const [words, setWords] = useState(null);
     const [limit, setLimit] = useState(100);
 
-    const { isLoading, error, data, refetch } = useQuery(
+    const { isLoading, data, refetch } = useQuery(
         ['getWords', { number: number }],
         getWords,
         {
@@ -108,32 +135,49 @@ export default function Home() {
     async function handleSubmit(e) {
         e.preventDefault();
 
+        if (number == '') {
+            console.log('aaa');
+            setInputError(true);
+            return;
+        }
+        setInputError(false);
         const { data } = await refetch();
-        console.log(data);
         setWords(data);
     }
 
     function fetchData() {
         setLimit(limit + 100);
-        console.log('aaaa');
     }
 
     return (
         <HomeStyles>
-            <FormStyles onSubmit={handleSubmit}>
-                <input
-                    onChange={(e) => setNumber(e.target.value)}
-                    placeholder="Enter number"
-                    type="text"
-                    maxLength="14"
-                    onInput={(e) =>
-                        (e.target.value = e.target.value.replace(/[^0-9]/g, ''))
-                    }
-                />
-                <button className="convert-btn" type="submit">
-                    Convert
-                </button>
-            </FormStyles>
+            <HeaderStyles>
+                <h1 className="title">Number to Words</h1>
+                <form onSubmit={handleSubmit}>
+                    <div className="input-div">
+                        <input
+                            onChange={(e) => setNumber(e.target.value)}
+                            placeholder="Enter number"
+                            type="text"
+                            maxLength="14"
+                            onInput={(e) =>
+                                (e.target.value = e.target.value.replace(
+                                    /[^0-9]/g,
+                                    ''
+                                ))
+                            }
+                        />
+                        {inputError && (
+                            <span className="error">
+                                Please enter the number
+                            </span>
+                        )}
+                    </div>
+                    <button className="convert-btn" type="submit">
+                        Convert
+                    </button>
+                </form>
+            </HeaderStyles>
             <WordsStyles id="scrollable">
                 {isLoading ? (
                     <div className="loader">
@@ -143,20 +187,34 @@ export default function Home() {
                             size={100}
                         />
                     </div>
+                ) : words ? (
+                    words?.length !== 0 ? (
+                        <InfiniteScroll
+                            className="scroll"
+                            dataLength={limit}
+                            next={fetchData}
+                            hasMore={true}
+                            scrollableTarget="scrollable"
+                        >
+                            {words?.slice(0, limit).map((word, index) => (
+                                <span key={index} className="word">
+                                    {word}
+                                </span>
+                            ))}
+                        </InfiniteScroll>
+                    ) : (
+                        <div className="loader">
+                            <p className="no-results">
+                                There are no words for inserted number...
+                            </p>
+                        </div>
+                    )
                 ) : (
-                    <InfiniteScroll
-                        className="scroll"
-                        dataLength={limit}
-                        next={fetchData}
-                        hasMore={true}
-                        scrollableTarget="scrollable"
-                    >
-                        {words?.slice(0, limit).map((word, index) => (
-                            <span key={index} className="word">
-                                {word}
-                            </span>
-                        ))}
-                    </InfiniteScroll>
+                    <div className="loader">
+                        <p className="no-results">
+                            The words will appear here when you convert.
+                        </p>
+                    </div>
                 )}
             </WordsStyles>
         </HomeStyles>

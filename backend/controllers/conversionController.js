@@ -22,6 +22,11 @@ function convert(number, index, keyLetters, arr, words) {
 
 exports.convertToWords = (req, res) => {
     const number = req.query.number;
+
+    if (number.length === 0) {
+        return res.send([]);
+    }
+
     const keyLetters = [
         '',
         '', // key 1
