@@ -4,7 +4,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { getWords } from '../services/ConvertService';
 import { useQuery } from 'react-query';
-
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { css } from '@emotion/react';
 import ClipLoader from 'react-spinners/ClipLoader';
 
@@ -24,7 +24,7 @@ const FormStyles = styled.form`
     height: 30%;
     width: 100%;
     input {
-        width: 25rem;
+        width: 17rem;
         padding: 1rem;
         margin-right: 2rem;
         border-radius: 3px;
@@ -60,23 +60,42 @@ const FormStyles = styled.form`
 const WordsStyles = styled.div`
     width: 100%;
     height: 50rem;
-    background-color: whitesmoke;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
     padding: 3rem;
+    background-color: whitesmoke;
+    box-shadow: 0 0 4px 1px var(--kiwi);
     overflow: auto;
+
+    .scroll {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: 50px;
+    }
+
     .word {
         display: flex;
         align-items: center;
         justify-content: center;
         text-align: center;
         padding: 1rem;
+        font-family: 'Roboto', sans-serif;
+        font-size: 1.8rem;
+    }
+    .loader {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 `;
 
 export default function Home() {
     const [number, setNumber] = useState();
     const [words, setWords] = useState([]);
+    const [limit, setLimit] = useState(100);
+
     const { isLoading, error, data, refetch } = useQuery(
         ['getWords', { number: number }],
         getWords,
@@ -90,39 +109,54 @@ export default function Home() {
         e.preventDefault();
 
         const { data } = await refetch();
+        console.log(data);
         setWords(data);
+    }
+
+    function fetchData() {
+        setLimit(limit + 100);
+        console.log('aaaa');
     }
 
     return (
         <HomeStyles>
             <FormStyles onSubmit={handleSubmit}>
                 <input
-                    type="number"
-                    placeholder="Enter number"
                     onChange={(e) => setNumber(e.target.value)}
+                    placeholder="Enter number"
+                    type="text"
+                    maxLength="14"
+                    onInput={(e) =>
+                        (e.target.value = e.target.value.replace(/[^0-9]/g, ''))
+                    }
                 />
                 <button className="convert-btn" type="submit">
                     Convert
                 </button>
             </FormStyles>
-            <WordsStyles>
+            <WordsStyles id="scrollable">
                 {isLoading ? (
-                    <ClipLoader
-                        color="rgb(0, 173, 152)"
-                        loading={isLoading}
-                        css="
-                        display: block;
-                        margin:  auto;
-                        border-color: red;
-                    "
-                        size={100}
-                    />
+                    <div className="loader">
+                        <ClipLoader
+                            color="rgb(0, 173, 152)"
+                            loading={isLoading}
+                            size={100}
+                        />
+                    </div>
                 ) : (
-                    words?.map((word, index) => (
-                        <span key={index} className="word">
-                            {word}
-                        </span>
-                    ))
+                    <InfiniteScroll
+                        className="scroll"
+                        dataLength={limit}
+                        next={fetchData}
+                        hasMore={true}
+                        scrollableTarget="scrollable"
+                    >
+                        {words?.slice(0, limit).map((word, index) => (
+                            <span key={index} className="word">
+                                {word}
+                            </span>
+                        ))}
+                    </InfiniteScroll>
                 )}
             </WordsStyles>
         </HomeStyles>
