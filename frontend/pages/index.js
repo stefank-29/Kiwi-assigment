@@ -104,6 +104,7 @@ const WordsStyles = styled.div`
     box-shadow: 0 0 4px 1px var(--kiwi);
     overflow: auto;
     margin-top: 5rem;
+
     .scroll {
         position: relative;
         width: 100%;
@@ -146,6 +147,22 @@ const WordsStyles = styled.div`
         height: 45rem;
         .scroll {
             grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media all and (min-width: 500px) {
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background-color: #e3e3e3;
+        }
+        ::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background-image: linear-gradient(
+                to bottom,
+                var(--kiwilight),
+                #23a6d5
+            );
         }
     }
 `;
