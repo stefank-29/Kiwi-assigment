@@ -67,6 +67,7 @@ const HeaderStyles = styled.div`
             margin-top: 3.5rem;
             align-self: flex-start;
             font-size: 1.8rem;
+            color: var(--black);
         }
         .input-div {
             position: relative;

@@ -21,6 +21,7 @@ const GlobalStyles = createGlobalStyle`
         --offWhite: #ededed;
         --backgroundGrey: #E8E8E8;
         --lightGreen: #3BFF89;
+        --green: #3Bbc89;
         --lightRed: #FF3B3B;
         --kiwilight: rgba(0, 173, 152, 0.3);
         --kiwi: rgb(0, 173, 152);
@@ -34,8 +35,23 @@ const GlobalStyles = createGlobalStyle`
         font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
             Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
         font-size: 1.5rem;
-        background-color: var(--kiwilight);
+      //  background-color: var(--kiwilight);
+        background: linear-gradient(-45deg, var(--green), #23c7ab, var(--kiwilight), #23a6d5);
+        background-size: 400% 400%;
+        animation: gradient 15s ease-in-out infinite;
 
+
+        @keyframes gradient {
+            0%{
+                background-position: 0 50%;
+            }
+            50%{
+                background-position: 100% 50%;
+            }
+            100%{
+                background-position: 0 50%;
+            }
+        }
     }
     a {
         color: inherit;
