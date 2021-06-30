@@ -31,7 +31,7 @@ var GlobalStyles = (0, _styledComponents.createGlobalStyle)(_templateObject());
 var InnerStyles = _styledComponents["default"].div.withConfig({
   displayName: "Page__InnerStyles",
   componentId: "sc-14vv5uc-0"
-})(["margin:0 auto;min-height:100vh;max-width:1200px;"]);
+})(["margin:0 auto;min-height:100vh;max-width:1200px;@media all and (max-width:900px){max-width:900px;padding:2rem;}"]);
 
 function Page(_ref) {
   var children = _ref.children;

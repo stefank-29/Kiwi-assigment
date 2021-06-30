@@ -75,7 +75,7 @@ const HeaderStyles = styled.div`
                 position: absolute;
                 left: 0;
                 top: 4.5rem;
-                color: var(--lightRed);
+                color: #990000;
             }
         }
         .convert-btn {
@@ -126,11 +126,27 @@ const WordsStyles = styled.div`
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, 50%);
     }
     .no-results {
         font-size: 2.5rem;
         font-family: 'Roboto', sans-serif;
+    }
+    @media all and (max-width: 900px) {
+        .scroll {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+    @media all and (max-width: 650px) {
+        .scroll {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    @media all and (max-width: 450px) {
+        height: 45rem;
+        .scroll {
+            grid-template-columns: repeat(2, 1fr);
+        }
     }
 `;
 

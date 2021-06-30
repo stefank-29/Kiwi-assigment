@@ -73,6 +73,10 @@ const InnerStyles = styled.div`
     margin: 0 auto;
     min-height: 100vh;
     max-width: 1200px;
+    @media all and (max-width: 900px) {
+        max-width: 900px;
+        padding: 2rem;
+    }
 `;
 
 export default function Page({ children }) {
