@@ -8,12 +8,8 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _ConvertService = require("../../services/ConvertService");
 
-var _axios = _interopRequireDefault(require("axios"));
-
-// import { render, screen } from '../test-utils';
-// import Home from '../../pages/index';
 describe('Fetching words', function () {
-  it('should return words',
+  it('should return all permutations of words',
   /*#__PURE__*/
   (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
@@ -33,7 +29,7 @@ describe('Fetching words', function () {
 
           case 2:
             data = _context.sent;
-            console.log(data);
+            expect(data).toEqual(['ad', 'ae', 'af', 'bd', 'be', 'bf', 'cd', 'ce', 'cf']);
 
           case 4:
           case "end":
@@ -41,5 +37,63 @@ describe('Fetching words', function () {
         }
       }
     }, _callee);
+  })));
+  it('should return only real english words',
+  /*#__PURE__*/
+  (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee2() {
+    var data;
+    return _regenerator["default"].wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.next = 2;
+            return (0, _ConvertService.getWords)({
+              queryKey: ['getWords', {
+                number: '2337',
+                filter: true
+              }]
+            });
+
+          case 2:
+            data = _context2.sent;
+            expect(data).toEqual(['adds', 'beds', 'beep', 'beer', 'bees']);
+
+          case 4:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  })));
+  it('should return empty array',
+  /*#__PURE__*/
+  (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee3() {
+    var data;
+    return _regenerator["default"].wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.next = 2;
+            return (0, _ConvertService.getWords)({
+              queryKey: ['getWords', {
+                number: '34244',
+                filter: true
+              }]
+            });
+
+          case 2:
+            data = _context3.sent;
+            expect(data).toEqual([]);
+
+          case 4:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
   })));
 });

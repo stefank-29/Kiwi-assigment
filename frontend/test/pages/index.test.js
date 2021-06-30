@@ -1,19 +1,37 @@
-// import { render, screen } from '../test-utils';
-// import Home from '../../pages/index';
 import { getWords } from '../../services/ConvertService';
-import axios from 'axios';
 
 describe('Fetching words', () => {
-    it('should return words', async () => {
-        //const words = ['ad', 'ae', 'af', 'bd', 'be', 'bf', 'cd', 'ce', 'cf'];
-        // const resp = { data: words };
-        //axios.get.mockResolvedValue(resp);
-
-        // axios.get.mockImplementationOnce(() => Promise.resolve(resp));
-
+    it('should return all permutations of words', async () => {
         const data = await getWords({
             queryKey: ['getWords', { number: '23', filter: false }],
         });
-        console.log(data);
+
+        expect(data).toEqual([
+            'ad',
+            'ae',
+            'af',
+            'bd',
+            'be',
+            'bf',
+            'cd',
+            'ce',
+            'cf',
+        ]);
+    });
+
+    it('should return only real english words', async () => {
+        const data = await getWords({
+            queryKey: ['getWords', { number: '2337', filter: true }],
+        });
+
+        expect(data).toEqual(['adds', 'beds', 'beep', 'beer', 'bees']);
+    });
+
+    it('should return empty array', async () => {
+        const data = await getWords({
+            queryKey: ['getWords', { number: '34244', filter: true }],
+        });
+
+        expect(data).toEqual([]);
     });
 });
