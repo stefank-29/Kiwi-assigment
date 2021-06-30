@@ -28,6 +28,10 @@ git clone https://github.com/stefank-29/Kiwi-assigment.git
 
 ### Run project:
 
+```
+cd Kiwi-assigment/
+```
+
 Frontend:
 
 ```
